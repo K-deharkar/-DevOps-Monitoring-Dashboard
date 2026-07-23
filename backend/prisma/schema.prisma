@@ -1,0 +1,48 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model ServerMetric {
+  id        Int      @id @default(autoincrement())
+  cpuUsage  Float
+  ramUsage  Float
+  diskUsage Float
+  timestamp DateTime @default(now())
+}
+
+model DockerContainer {
+  id        String   @id @default(uuid())
+  name      String
+  image     String
+  status    String   // "running", "stopped", "exited"
+  ports     String?
+  updatedAt DateTime @updatedAt
+}
+
+model Service {
+  id        Int      @id @default(autoincrement())
+  name      String
+  status    String   // "active", "inactive", "failed"
+  updatedAt DateTime @updatedAt
+}
+
+model Deployment {
+  id          Int      @id @default(autoincrement())
+  projectName String
+  version     String
+  status      String   // "success", "failed", "pending"
+  deployedAt  DateTime @default(now())
+}
+
+model Alert {
+  id        Int      @id @default(autoincrement())
+  message   String
+  severity  String   // "info", "warning", "critical"
+  resolved  Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
